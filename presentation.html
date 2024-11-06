@@ -415,11 +415,12 @@ ul.byline li + li {
 }
 </style></head><body><div class="reveal"><div class="slides"><section class="title" data-state="title"><h1>Wresting with Complexity</h1><div class="preamble"><style>
 blockquote, .paragraph { text-align: left; }
+.image { text-align: center }
 </style></div></section>
 <section id="_what_is_complexity"><h2>What is Complexity?</h2><div class="slide-content"><div class="quoteblock"><blockquote><strong>complex</strong> (<em>adj</em>), 1650s: "composed of interconnected parts, formed by a combination of simple things or elements"
 from <em>com</em> - with, <em>together</em> + <em>plectere</em> "to wear, braid, twine, entwine".</blockquote><div class="attribution">&#8212; https://www.etymonline.com/word/complex</div></div></div></section>
 <section><section id="_why_do_we_have_it"><h2>Why do we have it?</h2></section><section id="_its_an_essential_property"><h2>It&#8217;s an essential property</h2><div class="slide-content"><div class="quoteblock"><blockquote>The complexity of software is an essential property, not an accidental one. Hence, descriptions of a software entity that abstract away its complexity often abstract away its essence.</blockquote><div class="attribution"><cite>No Silver Bullet</cite><br>&#8212; Fred Brooks</div></div></div></section><section id="_the_problem_domain_is_complex"><h2>The problem domain is complex</h2><div class="slide-content"><div class="quoteblock"><blockquote>There are many things that make software development complex. But the heart of this complexity is the essential intricacy of the problem domain itself.</blockquote><div class="attribution"><cite>Forward to Domain-Driven Design by Eric Evans</cite><br>&#8212; Martin Fowler</div></div></div></section></section>
-<section><section id="_we_have_it"><h2>We have it</h2></section><section id="_victory"><h2>Victory</h2><div class="slide-content"><div class="imageblock"><img src="victory.png" alt="victory"></div></div></section><section id="_red_whale"><h2>Red Whale</h2><div class="slide-content"><div class="imageblock"><img src="red-whale.png" alt="red whale"></div></div></section></section>
+<section><section id="_we_have_it"><h2>We have it</h2></section><section id="_victory"><h2>Victory</h2><div class="slide-content"><div class="paragraph"><p><span class="image"><img src="victory.png" alt="victory"></span></p></div></div></section><section id="_red_whale"><h2>Red Whale</h2><div class="slide-content"><div class="paragraph"><p><span class="image"><img src="red-whale.png" alt="red whale"></span></p></div></div></section></section>
 <section id="_complexity_comes_from_two_places"><h2>Complexity comes from two places</h2><div class="slide-content"><table class="tableblock frame-none grid-none" style="width:100%"><colgroup><col style="width:50%"><col style="width:50%"></colgroup><tbody><tr><td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Domain Complexity</strong></p></td><td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Technical Complexity</strong></p></td></tr></table></div></section>
 <section><section id="_example_uber"><h2>Example: Uber</h2></section><section id="_domain_complexity"><h2>Domain Complexity</h2><div class="slide-content"><div class="ulist"><ul><li><p>Demand-based pricing</p></li><li><p>Driver assignment</p></li><li><p>Route optimization</p></li></ul></div></div></section><section id="_technical_complexity"><h2>Technical Complexity</h2><div class="slide-content"><div class="ulist"><ul><li><p>Real-time data processing</p></li><li><p>Distributed systems</p></li><li><p>Payment processing</p></li><li><p>Mobile app development</p></li></ul></div></div></section></section>
 <section><section id="_example_football_simulation_game"><h2>Example: Football Simulation Game</h2></section><section id="_domain_complexity_2"><h2>Domain Complexity</h2><div class="slide-content"><div class="ulist"><ul><li><p>Player attributes</p></li><li><p>Team tactics</p></li><li><p>Match simulation</p></li><li><p>League simulation</p></li><li><p>Transfer market</p></li></ul></div></div></section><section id="_technical_complexity_2"><h2>Technical Complexity</h2><div class="slide-content"><div class="ulist"><ul><li><p>Multiplayer</p></li><li><p>in-game purchases</p></li><li><p>attribute updates</p></li><li><p>Cross-device compatibility</p></li><li><p>Real-time updates</p></li><li><p>Graphics</p></li></ul></div></div></section></section>
@@ -436,12 +437,234 @@ from <em>com</em> - with, <em>together</em> + <em>plectere</em> "to wear, braid,
   end</code></pre></div></div>
 <div class="paragraph"><p><span class="image"><img src="victory_diagrams.png" alt="victory diagrams"></span></p></div></div></section><section id="_technical_complexity_3"><h2>Technical Complexity</h2><div class="slide-content"><div class="ulist"><ul><li><p>Broadcasts</p></li><li><p>Notifications</p></li><li><p>Integrations (Active Prospect, Optimoroute, Quickbooks, Workday, Twilio)</p></li><li><p>off-loading background report generation</p></li><li><p>SQL optimization</p></li></ul></div></div></section></section>
 <section id="_these_complexities_are_unavoidable"><h2>These complexities are unavoidable</h2></section>
-<section id="_the_hidden_complexity"><h2>The Hidden Complexity</h2><div class="slide-content"><div class="paragraph"><p>Combining the growing complexity of the domain and the complexity of the technical solution.</p></div></div></section>
+<section id="_the_hidden_complexity"><h2>The Hidden Complexity</h2><div class="slide-content"><div class="paragraph"><p>Combining the growing complexity of the domain and the complexity of the technical solution.</p></div>
+<div class="paragraph"><p><span class="image"><img src="brent.gif" alt="brent"></span></p></div></div></section>
 <section id="_my_mission"><h2>My Mission</h2><div class="slide-content"><div class="paragraph"><p>To try to tame the beasts of complexity by keeping the domain and technical complexities separate. Relatedly, I&#8217;ve been haunted by this tweet, for forty days and forty nights.</p></div>
 <div class="paragraph"><p><span class="image"><img src="tweet.png" alt="tweet"></span></p></div></div></section>
 <section><section id="_introducing_dragon_drip"><h2>Introducing: Dragon Drip</h2><div class="slide-content"><div class="paragraph"><p><em>Dragon Drip</em> is a small-batch coffee roaster that sources raw coffee beans and sells roasted blends online.</p></div><div class="paragraph"><p>I identified 12 <em>flows</em> to get a first 'end-to-end slice' through the business.</p></div></div></section><section id="_add_bean"><h2>Add Bean</h2><div class="slide-content"><div class="paragraph"><p>Adds a new bean to the inventory</p></div></div></section><section id="_add_purchase_order"><h2>Add Purchase Order</h2><div class="slide-content"><div class="paragraph"><p>Adds a new purchase order to the system</p></div></div></section><section id="_receive_purchase_order"><h2>Receive Purchase Order</h2><div class="slide-content"><div class="ulist"><ul><li><p>Mark purchase order as received</p></li><li><p>Update inventory with the received beans</p></li></ul></div></div></section><section id="_add_roast_type"><h2>Add Roast Type</h2><div class="slide-content"><div class="paragraph"><p>Adds a new roast type to the system (e.g. French roast)</p></div></div></section><section id="_add_product"><h2>Add Product</h2><div class="slide-content"><div class="ulist"><ul><li><p>Adds a new product to the system for sale on the shop</p></li><li><p>is associated with a mix of beans, and a roast type</p></li><li><p>Has a price</p></li><li><p>Availibility is determined directly by stock level in the inventory.</p></li></ul></div></div></section><section id="_add_to_basket"><h2>Add to Basket</h2><div class="slide-content"><div class="ulist"><ul><li><p>Adds a product to the basket in the shop</p></li><li><p>Max basket weight can be 10kg</p></li><li><p>Orders over $50 are free shipping</p></li></ul></div></div></section><section id="_place_order"><h2>Place order</h2><div class="slide-content"><div class="ulist"><ul><li><p>Represents a customer placing an order</p></li><li><p>Order is set to be prepared (roasting is more or less on demand)</p></li></ul></div></div></section><section id="_processing_orders"><h2>Processing orders</h2><div class="slide-content"><div class="ulist"><ul><li><p>Not really a user flow, but would be if we didn&#8217;t do it in our domain</p></li><li><p>We demand the amount of roasted beans required for all orders in the batch that need to be shipped today</p></li><li><p>For each order this could be a combination of roasts types and amounts of a certain bean across many order items</p></li><li><p>Across all order items in the batch, we generate a series of demands</p></li><li><p>Beans are roasted in multiples of 1kg, but sold in quantities of 250g, so there&#8217;s a mix of roasted and unroasted coffee around, with different use-by dates</p></li></ul></div></div></section><section id="_roast_beans"><h2>Roast Beans</h2><div class="slide-content"><div class="ulist"><ul><li><p>Beans can only be roasted in minimum 1kg batches</p></li><li><p>Starts the use by date countdown</p></li><li><p>Roasts are now ready to be allocated to orders</p></li></ul></div></div></section><section id="_packing_order_items"><h2>Packing order items</h2><div class="slide-content"><div class="ulist"><ul><li><p>Preparing the coffee blends and putting them in bags</p></li></ul></div></div></section><section id="_ship"><h2>Ship</h2><div class="slide-content"><div class="ulist"><ul><li><p>Orders are packed themselves when the each order item has been packed, and then shipped.</p></li></ul></div></div></section></section>
-<section><section id="_1_domain_driven_design"><h2>1. Domain Driven Design</h2><div class="slide-content"><div class="paragraph"><p>My first attempt was Domain-driven design (DDD). In Domain-driven design the domain is the heart of the software, and everything else revolves around it.</p></div></div></section><section id="_domain_model"><h2>Domain model</h2><div class="slide-content"><div class="paragraph"><p>In DDD a series of types of object are defined that represent the real world domain. High attention is paid to a 'ubiquitous language' between the domain experts (client) and the developers. e.g. if they call it an 'SDR', we call it an 'SDR' in the code.</p></div></div></section><section id="_layered_architecture"><h2>Layered architecture</h2><div class="slide-content"><div class="paragraph"><p>DDD operates with a layered architecture (which gives me the separation of the complexities). Each layer can only call the layer below it, and doesn&#8217;t know what&#8217;s above it.</p></div>
-<div class="paragraph"><p><span class="image"><img src="layered-architecture.png" alt="layered architecture"></span></p></div></div></section></section></div></div><script src="https://cdn.jsdelivr.net/npm/reveal.js@4/dist/reveal.js"></script><script>Array.prototype.slice.call(document.querySelectorAll('.slides section')).forEach(function(slide) {
+<section id="_design_it_twice"><h2>Design it Twice</h2><div class="slide-content"><div class="quoteblock"><blockquote>Designing software is hard, so it&#8217;s unlikely that your first thoughts about how to structure a module or system will produce the best design. You&#8217;ll end up with a much better result if you consider multiple options for each major design decision: <strong>design it twice</strong>.</blockquote><div class="attribution"><cite>A Philosophy of Software Design</cite><br>&#8212; John Ousterhout</div></div></div></section>
+<section><section id="_1_domain_driven_design"><h2>1. Domain Driven Design</h2><div class="slide-content"><div class="paragraph"><p>My first attempt was Domain-driven design (DDD). In Domain-driven design the domain is the heart of the software, and everything else revolves around it.</p></div></div></section><section id="_domain_model"><h2>Domain model</h2><div class="slide-content"><div class="paragraph"><p>In DDD a series of types of object are defined that represent the real world domain. High attention is paid to a 'ubiquitous language' between the domain experts (client) and the developers. e.g. if they call it an 'SDR', we call it an 'SDR' in the code.</p></div></div></section><section id="_layered_architecture"><h2>Layered architecture</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true">  +-----------------+    │
+  |  Presentation   |    │
+  +-----------------+    │
+  |  Application    |    │
+  +-----------------+    │ Dependency Direction
+  |  Domain         |    │
+  +-----------------+    │
+  |  Infrastructure |    │
+  +-----------------+    ▼</code></pre></div></div></div></section></section>
+<section><section id="_positives"><h2>Positives</h2></section><section id="_identifying_different_types_of_objects"><h2>Identifying different types of objects</h2><div class="slide-content"><div class="paragraph"><p>There&#8217;s a difference between an <code>Entity</code>, where you care about the thing&#8217;s <em>identity</em> (e.g. an Order), and a <code>Value Object</code>, where you care about the thing&#8217;s <em>value</em> (e.g. an Address). It takes a while, but thinking about the objects not <strong>automatically</strong> as an ActiveRecord is a good exercise.</p></div></div></section><section id="_separation_of_concerns"><h2>Separation of Concerns</h2><div class="slide-content"><div class="paragraph"><p>The Domain never knows what application it&#8217;s being run in, so it can never think about it. It does know that it has <strong>some</strong> kind of persistence mechanism, but it doesn&#8217;t know what it is - (it&#8217;s injected in).</p></div></div></section><section id="_the_domain_is_where_everything_happens"><h2>The Domain is where <strong>everything happens</strong></h2><div class="slide-content"><div class="paragraph"><p>So much so that I was able to put a Sinatra app and a CLI app over the same domain, and they just handled the user&#8217;s flow, not the decisions that were being made.</p></div>
+<div class="ulist"><ul><li><p>In the CLI app, an in memory database was used</p></li><li><p>In the Sinatra app, a CSV was used as the database</p></li><li><p>The Domain still doesn&#8217;t know any of those things exist.</p></li></ul></div></div></section><section id="_layered_takeaway_for_our_rails_apps"><h2>Layered takeaway for our Rails apps</h2><div class="slide-content"><div class="paragraph"><p>With broadcasting we actually violate the 'layered architecture' flow in a very interesting way. The Application Layer, sometimes all the way down to our 'domain' layer, knows about HTML.</p></div>
+<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">class Projects::Update
+  def maybe_broadcast_to_live_finance
+    return unless project.status.in? LIVE_FINANCE_STATUSES
+
+    Projects::LiveFinance.add(project) if project.saved_change_to_status? &amp;&amp; project.live_financing?
+
+    #  We know if the HTML is already on the page or not
+    Projects::LiveFinance.replace(project)
+  end
+end</code></pre></div></div></div></section><section id="_testing"><h2>Testing</h2><div class="slide-content"><div class="paragraph"><p>+ Domain tests are fast (there&#8217;s no database)</p></div></div></section></section>
+<section><section id="_negatives"><h2>Negatives</h2></section><section id="_you_always_go_all_the_way_through_the_stack_on_every_action"><h2>You always go all the way through the stack on every action.</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true">                           ▲
+  +-----------------+    │ │
+  |  Presentation   |    │ │
+  +-----------------+    │ │
+  |  Application    |    │ │
+  +-----------------+    │ │
+  |  Domain         |    │ │
+  +-----------------+    │ │
+  |  Infrastructure |    │ │
+  +-----------------+    ▼</code></pre></div></div></div></section><section id="_its_not_really_as_separated_as_it_seems"><h2>It&#8217;s not really as separated as it seems</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true">      ┌──┐      ┌───────────┐       ┌──────┐        ┌────────────┐       ┌──────┐     ┌───┐    ┌──┐
+────► │UI├───►  │Application│ ---&gt;  │Domain│─────►  │Persistence │ ────► │Domain│ --&gt; │App│--&gt; │UI│
+      └──┘      └───────────┘       └──────┘        └────────────┘       └──────┘     └───┘    └──┘</code></pre></div></div></div></section><section id="_testing_2"><h2>Testing</h2><div class="slide-content"><div class="paragraph"><p>Because everything is so isolated, it&#8217;s all mocks and stubs.</p></div>
+<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true">OrderRepository
+  #find_by_id
+    when the persistence layer returns a order
+      behaves like a successful result
+    when the persistence layer raises an exception
+      behaves like a failure result
+  #save
+    calls the save on the persistence layer with the order
+    behaves like a successful result
+  #all
+    behaves like a successful result</code></pre></div></div></div></section><section id="_repositories"><h2>Repositories</h2><div class="slide-content"><div class="paragraph"><p>They&#8217;re fine, but, I still ended up thinking very CRUDily.</p></div></div></section><section id="_writing_it_all_out_by_hand"><h2>Writing it all out by hand</h2><div class="slide-content"><div class="paragraph"><p>When it comes to writing <code>#save</code>, <code>#find</code> etc, Rails gives me a lot for free. I&#8217;m used to it.</p></div></div></section></section>
+<section id="_2_functional_core_imperative_shell"><h2>2. 'Functional Core, Imperative Shell'</h2><div class="slide-content"><div class="paragraph"><p>Push the I/O to the edges, and keep the <strong>decision making</strong> in a core that is pure and functional.</p></div>
+<div class="paragraph"><p>The edges are larger than in DDD - they handle the Technical Complexity. The core is as complex as your Domain.</p></div>
+<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true"> ┌───┐      ┌────────────────────────────────┐       ┌───┐
+ │I/O│────► │Business Logic / Decision Making│─────► │I/O│
+ └───┘      └────────────────────────────────┘       └───┘</code></pre></div></div></div></section>
+<section><section id="_an_example"><h2>An example</h2></section><section id="_what_does_this_code_return"><h2>What does this code return?</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">@product.save</code></pre></div></div></div></section><section id="_boolean_what_else"><h2>Boolean. What else?</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">@product.save # =&gt; Boolean</code></pre></div></div></div></section><section id="_what_else"><h2>What else?</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">@product.save # =&gt; [Boolean, @product*] (@product has also changed)</code></pre></div></div></div></section><section id="_holy_st"><h2>Holy S#!t</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">@product.save # =&gt; [Boolean, @product*,
+              #              AdapterNotFound,
+              #              AdapterNotSpecified,
+              #              AttributeAssignmentError,
+              #              ConnectionError,
+              #              ConnectionFailed,
+              #              ConnectionTimeoutError,
+              #              Deadlocked,
+              #              InvalidForeignKey,
+              #              LockWaitTimeout,
+              #              QueryCanceled,
+              #              ReadOnlyRecord,
+              #              RecordInvalid,
+              #              RecordNotDestroyed,
+              #              RecordNotSaved,
+              #              RecordNotUnique,
+              #              Rollback,
+              #              SerializationTypeMismatch,
+              #              StatementInvalid,
+              #              UnknownAttributeError,
+              #              ConnectionBad (PostgreSQL-specific),
+              #              SocketError,
+              #              StandardError,
+              #              Error]</code></pre></div></div></div></section><section id="_what_else_could_it_do"><h2>What else <strong>could</strong> it do?</h2><div class="slide-content"><div class="paragraph"><p>absolutely anything:</p></div>
+<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">class Order &lt; ApplicationRecord
+  # Associations
+  belongs_to :customer
+  has_many :order_items
+  has_many :payments
+
+  # Callbacks
+  before_save :set_defaults, :apply_discounts, :calculate_total, if: :new_record?
+  before_save :adjust_inventory
+  before_save :check_order_limits, if: :bulk_order?
+  after_save :notify_customer
+  after_save :generate_invoice, if: :paid?
+  after_save :trigger_fulfillment_process, if: :ready_for_fulfillment?
+  after_save :update_customer_statistics
+
+  # Validations
+  validates :customer_id, presence: true
+  validates :status, inclusion: { in: %w[pending paid shipped completed canceled] }
+
+  # Custom Callbacks
+  before_validation :sanitize_data, on: :create
+  after_commit :log_order_change, on: %i[create update]
+end</code></pre></div></div></div></section></section>
+<section><section id="_building_the_core"><h2>Building the Core</h2><div class="slide-content"><div class="ulist"><ul><li><p>A document of what the business problem does.</p></li><li><p>When developing, I&#8217;m <strong>only</strong> thinking about the domain problem.</p></li></ul></div></div></section><section id="_an_example_flow"><h2>An example flow</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">class ReceivePurchaseOrder &lt; ServiceObject
+  def call(purchase_order:, recipient_id:, received_on:)
+    receipt_details = ReceiptDetails.new(recipient_id:, received_on:)
+
+    updated_purchase_order = purchase_order.receive(receipt_details)
+
+    # Return a command to store the updated purchase order
+    Success([Commands::UpdatePurchaseOrder.new(updated_purchase_order),
+             Commands::IncrementRawStock.new(bean_id: updated_purchase_order.bean_id,
+                                             g: updated_purchase_order.g)])
+  end
+end</code></pre></div></div></div></section><section id="_the_command"><h2>The Command</h2><div class="slide-content"><div class="paragraph"><p>The name is a 'decision', and the data is what the shell needs to apply that decision. Nothing else.</p></div>
+<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">class IncrementRawStock
+  attr_reader :bean_id, :g
+
+  include Dry::Equalizer(:bean_id, :g)
+
+  def initialize(bean_id:, g:)
+    @bean_id = bean_id
+    @g = g
+  end
+end</code></pre></div></div>
+<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby"># same thing
+[:increment_raw_stock, { bean_id: 1, g: 1000 }]</code></pre></div></div></div></section><section id="_give_me_valid_data_or_give_me_death"><h2>Give me valid data, or give me death</h2><div class="slide-content"><div class="paragraph"><p>The core expects whatever&#8217;s calling it to already give it valid data types. This means no nil guards, or type checks,
+we&#8217;re just focused on the problem:</p></div>
+<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">class OrderItem &lt; Dry::Struct
+  attribute :price, Types::Money
+  attribute :product_name, Types::String
+  attribute :status, Types::Symbol
+  attribute :bean_mixes, Types::Array.of(Values::BeanMix)
+  attribute :roast_type_id, Types::Symbol
+end</code></pre></div></div></div></section><section id="_two_types_of_validation"><h2>Two types of validation</h2><div class="slide-content"><div class="ulist"><ul><li><p>This reveals the difference between <strong>business validation</strong> and <strong>data validation</strong></p></li></ul></div>
+<div class="paragraph"><p>e.g. Product price must be a decimal is data validation. A minimum price of $10.00 is business validation.</p></div></div></section><section id="_testing_3"><h2>Testing</h2><div class="slide-content"><div class="paragraph"><p>+ There isn&#8217;t a single mock or stub in the core when it&#8217;s tested, they&#8217;re all just objects, there&#8217;s nothing to mock!</p></div>
+<div class="paragraph"><p>+ The 'unit test' isn&#8217;t each file, most of them don&#8217;t really <strong>do</strong> anything other than house data. We unit test the <strong>Flow</strong>, which has been designed to map to a real-world person&#8217;s goal:</p></div>
+<div class="paragraph"><p>+ The data is valid by assumption, nothing to test there.</p></div>
+<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true"> ┌───┐      ┌────────────────────────────────┐       ┌───┐
+ │I/O│────► │Business Logic / Decision Making│─────► │I/O│
+ └───┘      └────────────────────────────────┘       └───┘
+            |────────────────────────────────|
+                      UNIT TEST THIS</code></pre></div></div></div></section></section>
+<section id="_the_commands_i_stole_from_elm"><h2>The Commands I stole from Elm</h2><div class="slide-content"><div class="paragraph"><p>Elm is a functional language that has a very strong opinion about how to handle side effects. It&#8217;s called the 'Command Pattern'.</p></div>
+<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true"> ┌────────┐
+ │  MODEL │◄─────────┐
+ └────────┘          │
+      │              │
+      ▼              │
+ ┌──────────┐        │
+ │    VIEW  │        │
+ │  (model) │        │
+ └──────────┘        │
+       │             │
+       ▼             │
+ ┌────────────────┐  │
+ │    UPDATE      │  │
+ │(model, Command)├──┘
+ └────────────────┘</code></pre></div></div></div></section>
+<section><section id="_the_io_layer_outside_of_rails"><h2>The 'I/O' layer outside of Rails</h2><div class="slide-content"><div class="paragraph"><p>An absolute hell hole.</p></div></div></section><section id="_me_using_the_most_popular_sql_management_gem_to_write_some_data"><h2>Me using the most popular SQL management gem to write some data</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">class OrderRepository
+  include Dry::Monads[:result]
+  include Dry::Monads::Do.for(:create, :find)
+  def initialize(container = DB_CONTAINER)
+    @orders = container.relations[:orders]
+  end
+
+  def create(order)
+    order_data = {
+      id: order.id,
+      customer_id: order.customer.id,
+      shipping_address_json: order.shipping_address.to_h.to_json,
+      billing_address_json: order.billing_address.to_h.to_json,
+      status: order.status.to_s,
+      created_at: Time.now
+    }
+    @orders.changeset(:create, order_data).commit
+
+    order.items.each do |item|
+      OrderItemRepository.new.create_for_order_id(order.id, item)
+    end
+
+    Success(order)
+  rescue StandardError =&gt; e
+    Failure(e.message)
+  end
+
+  def find(order_id)
+    order_data = @orders.by_pk(order_id).combine(:order_items).one!
+    customer = yield CustomerRepository.new.find(order_data[:customer_id])
+
+    shipping_address_data = JSON.parse(order_data[:shipping_address_json])
+    billing_address_data = JSON.parse(order_data[:billing_address_json])
+
+    order = Order.new(order_data.merge(
+                        customer:,
+                        shipping_address: Address.new(shipping_address_data),
+                        billing_address: Address.new(billing_address_data),
+                        items: map_items_to_entities(order_data[:order_items])
+                      ))
+
+    Success(order)
+  rescue StandardError =&gt; e
+    Failure(e.message)
+  end
+
+  private
+
+  def map_items_to_entities(items_data)
+    items_data.map do |item_data|
+      OrderItem.new(item_data)
+    end
+  end
+end</code></pre></div></div></div></section></section>
+<section id="_the_lego_problem"><h2>The Lego Problem</h2><div class="slide-content"><div class="paragraph"><p>Composability with Dry Monads and Dry Transactions.</p></div></div></section>
+<section id="_the_best_idea_ive_got_for_now"><h2>The best idea I&#8217;ve got for now</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true"> ┌────────┐
+ │  MODEL │◄─────────┐ | The Rails DB
+ └────────┘          │
+      │              │
+      ▼              │
+ ┌──────────┐        │
+ │    VIEW  │        │
+ │  (model) │        │ | The Rails views, controllers, routing
+ └──────────┘        │
+       │             │
+       ▼             │
+ ┌────────────────┐  │
+ │    UPDATE      │  │
+ │(model, Command)├──┘ | The functional core, returning commands and some modified objects for Rails to save.
+ └────────────────┘</code></pre></div></div></div></section></div></div><script src="https://cdn.jsdelivr.net/npm/reveal.js@4/dist/reveal.js"></script><script>Array.prototype.slice.call(document.querySelectorAll('.slides section')).forEach(function(slide) {
   if (slide.getAttribute('data-background-color')) return;
   // user needs to explicitly say he wants CSS color to override otherwise we might break custom css or theme (#226)
   if (!(slide.classList.contains('canvas') || slide.classList.contains('background'))) return;
