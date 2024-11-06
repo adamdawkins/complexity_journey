@@ -7,10 +7,12 @@
 :highlightjs-theme: https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css
 :highlightjsdir: https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0
 
+
 ++++
 <style>
-blockquote, .paragraph { text-align: left; }
-.image { text-align: center }
+blockquote, .paragraph, h1, h2, h3, h4, .ulist { text-align: left; }
+.reveal blockquote { width: 100%; padding: 5%; }
+.reveal pre { width: 100%}
 </style>
 ++++
 
@@ -196,7 +198,7 @@ In DDD a series of types of object are defined that represent the real world dom
 
 ----
 
-== Positives
+=== Positives
 
 === Identifying different types of objects
 
@@ -233,7 +235,7 @@ end
 === Testing
 + Domain tests are fast (there's no database)
 
-== Negatives
+=== Negatives
 
 === You always go all the way through the stack on every action.
 
@@ -300,7 +302,7 @@ The edges are larger than in DDD - they handle the Technical Complexity. The cor
  └───┘      └────────────────────────────────┘       └───┘
 ----
 
-== An example
+== An example of the problem
 
 === What does this code return?
 
@@ -309,14 +311,14 @@ The edges are larger than in DDD - they handle the Technical Complexity. The cor
 @product.save
 ----
 
-=== Boolean. What else?
+=== Boolean. What else does it do?
 
 [source, ruby]
 ----
 @product.save # => Boolean
 ----
 
-=== What else?
+=== It changes the @product object. What else could it return?
 
 [source, ruby]
 ----
@@ -352,19 +354,12 @@ The edges are larger than in DDD - they handle the Technical Complexity. The cor
               #              Error]
 ----
 
-=== What else *could* it do?
-
-absolutely anything:
+=== What else could it do?
+Absolutely anything.
 
 [source, ruby]
 ----
 class Order < ApplicationRecord
-  # Associations
-  belongs_to :customer
-  has_many :order_items
-  has_many :payments
-
-  # Callbacks
   before_save :set_defaults, :apply_discounts, :calculate_total, if: :new_record?
   before_save :adjust_inventory
   before_save :check_order_limits, if: :bulk_order?
@@ -373,11 +368,9 @@ class Order < ApplicationRecord
   after_save :trigger_fulfillment_process, if: :ready_for_fulfillment?
   after_save :update_customer_statistics
 
-  # Validations
   validates :customer_id, presence: true
   validates :status, inclusion: { in: %w[pending paid shipped completed canceled] }
 
-  # Custom Callbacks
   before_validation :sanitize_data, on: :create
   after_commit :log_order_change, on: %i[create update]
 end
@@ -398,23 +391,20 @@ class ReceivePurchaseOrder < ServiceObject
     updated_purchase_order = purchase_order.receive(receipt_details)
 
     # Return a command to store the updated purchase order
-    Success([Commands::UpdatePurchaseOrder.new(updated_purchase_order),
-             Commands::IncrementRawStock.new(bean_id: updated_purchase_order.bean_id,
-                                             g: updated_purchase_order.g)])
+    Success([UpdatePurchaseOrder.new(updated_purchase_order),
+             IncrementRawStock.new(bean_id: updated_purchase_order.bean_id,
+                                   g: updated_purchase_order.g)])
   end
 end
 ----
 
 === The Command
-
-The name is a 'decision', and the data is what the shell needs to apply that decision. Nothing else.
+Just a signal of intent.
 
 [source, ruby]
 ----
 class IncrementRawStock
   attr_reader :bean_id, :g
-
-  include Dry::Equalizer(:bean_id, :g)
 
   def initialize(bean_id:, g:)
     @bean_id = bean_id
@@ -423,40 +413,28 @@ class IncrementRawStock
 end
 ----
 
-[source, ruby]
-----
-# same thing
-[:increment_raw_stock, { bean_id: 1, g: 1000 }]
-----
-
-=== Give me valid data, or give me death
-The core expects whatever's calling it to already give it valid data types. This means no nil guards, or type checks,
-we're just focused on the problem:
+==== Handling the command
 
 [source, ruby]
 ----
-class OrderItem < Dry::Struct
-  attribute :price, Types::Money
-  attribute :product_name, Types::String
-  attribute :status, Types::Symbol
-  attribute :bean_mixes, Types::Array.of(Values::BeanMix)
-  attribute :roast_type_id, Types::Symbol
-end
+result = Flows::ReceivePurchaseOrder.call(**args)
+
+return result if result.failure?
+
+result.commands.each do |cmd|
+  case cmd
+  when IncrementRawStock
+    StockLevel.find_by(bean_id: cmd.bean_id).increment(cmd.g)
+  when SomeOtherCommand
+  else
+    raise UnknownCommandError
+  end
 ----
-
-
-=== Two types of validation 
-
-- This reveals the difference between *business validation* and *data validation*
-
-e.g. Product price must be a decimal is data validation. A minimum price of $10.00 is business validation.
 
 === Testing
 + There isn't a single mock or stub in the core when it's tested, they're all just objects, there's nothing to mock!
 
 + The 'unit test' isn't each file, most of them don't really *do* anything other than house data. We unit test the *Flow*, which has been designed to map to a real-world person's goal:
-
-+ The data is valid by assumption, nothing to test there.
 
 [source]
 ----
@@ -470,7 +448,29 @@ e.g. Product price must be a decimal is data validation. A minimum price of $10.
 
 == The Commands I stole from Elm
 
-Elm is a functional language that has a very strong opinion about how to handle side effects. It's called the 'Command Pattern'.
+[source,lua]
+----
+-- MODEL
+model = 0
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        Increment ->
+            model + 1
+        Decrement ->
+            model - 1
+
+view : Model -> Html Msg
+view model =
+    div []
+        [ button [ onClick Increment ] [ text "+" ]
+        , div [] [ text (String.fromInt model) ]
+        , button [ onClick Decrement ] [ text "-" ]
+        ]
+----
+
+=== It's this pattern
 
 [source]
 ----
@@ -490,6 +490,135 @@ Elm is a functional language that has a very strong opinion about how to handle 
  │(model, Command)├──┘
  └────────────────┘
 ----
+
+
+== The Lego Problem
+Because it's all just in memory, we can chain things together much more safely inside the core, but to do so, we need a shared way of joining them together.
+
+image:lego.avif[]
+
+=== Introducing the Result Monad
+
+[quote]
+A monad is just a monoid in the category of endofunctors, what's the problem?
+
+=== It's a wrapper.
+
+[source, ruby]
+----
+# if you're happy, return your result in a Success
+# If you're not happy, return it in a Failure.
+
+def validate_user(user)
+  if user.valid?
+    Success(user)
+  else
+    Failure(user.errors)
+  end
+end
+----
+
+=== Using the wrapper
+
+[source, ruby]
+----
+result = validate_user(user)
+
+if result.success?
+  DoSomethingElse.call(success.value!)
+else
+  puts result.failure
+end
+----
+
+=== This gives us lego
+
+Imagine we're:
+* validating the user
+* checking the stock level of the basket 
+* processing payment
+* then creating an order.
+
+[source]
+----
+
+       ┌───────┐    ┌───────┐    ┌─────────────┐    ┌─────┐
+────►  │Boolean│──► │Integer│ -->│Stripe object│--> │Order│
+       └───────┘    └───────┘    └─────────────┘    └─────┘
+----
+
+[source]
+----
+      ┌──────┐     ┌──────┐    ┌──────┐     ┌──────┐    
+────► │Result├───► │Result├───►│Result├───► │Result├───►
+      └──────┘     └──────┘    └──────┘     └──────┘    
+----
+
+
+=== A transaction
+
+[source,ruby]
+----
+class PlaceOrderExample
+include Dry::Transaction
+
+  step :validate_basket               #      │
+  step :check_stock                   #      │
+  step :process_payment               #      │
+  step :create_order                  #      │
+                                      #      ▼
+  private                                    
+
+  def validate_basket; end
+  def check_stock; end
+  def process_payment; end
+  def create_order; end
+----
+
+=== More useful in the I/O
+
+Although this is a very *functional* pattern, and it's been quite nice to say "everything returns success or failure", the power is probably best used for wrapping uncertainites. 
+
+Remember this?
+
+[source, ruby]
+----
+@product.save # => [Boolean, @product*,
+              #              AdapterNotFound,
+              #              AdapterNotSpecified,
+              #              AttributeAssignmentError,
+              #              ConnectionError,
+              #              ConnectionFailed,
+              #              ConnectionTimeoutError,
+              #              Deadlocked,
+              #              InvalidForeignKey,
+              #              LockWaitTimeout,
+              #              QueryCanceled,
+              #              ReadOnlyRecord,
+              #              RecordInvalid,
+              #              RecordNotDestroyed,
+              #              RecordNotSaved,
+              #              RecordNotUnique,
+              #              Rollback,
+              #              SerializationTypeMismatch,
+              #              StatementInvalid,
+              #              UnknownAttributeError,
+              #              ConnectionBad (PostgreSQL-specific),
+              #              SocketError,
+              #              StandardError,
+              #              Error]
+----
+
+===
+
+It becomes this:
+
+[source, ruby]
+----
+@product.save # => Success(product) or Failure(any of the errors)
+----
+
+
 
 == The 'I/O' layer outside of Rails
 An absolute hell hole.
@@ -554,10 +683,12 @@ class OrderRepository
 end
 ----
    
-== The Lego Problem
-Composability with Dry Monads and Dry Transactions.
 
 == The best idea I've got for now
+
+* Domain Complexity - Functional Core
+* Technical Complexity - Rails
+
 [source]
 ----
  ┌────────┐

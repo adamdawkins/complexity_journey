@@ -414,8 +414,9 @@ ul.byline li + li {
   margin-top: 0.25em;
 }
 </style></head><body><div class="reveal"><div class="slides"><section class="title" data-state="title"><h1>Wresting with Complexity</h1><div class="preamble"><style>
-blockquote, .paragraph { text-align: left; }
-.image { text-align: center }
+blockquote, .paragraph, h1, h2, h3, h4, .ulist { text-align: left; }
+.reveal blockquote { width: 100%; padding: 5%; }
+.reveal pre { width: 100%}
 </style></div></section>
 <section id="_what_is_complexity"><h2>What is Complexity?</h2><div class="slide-content"><div class="quoteblock"><blockquote><strong>complex</strong> (<em>adj</em>), 1650s: "composed of interconnected parts, formed by a combination of simple things or elements"
 from <em>com</em> - with, <em>together</em> + <em>plectere</em> "to wear, braid, twine, entwine".</blockquote><div class="attribution">&#8212; https://www.etymonline.com/word/complex</div></div></div></section>
@@ -451,8 +452,7 @@ from <em>com</em> - with, <em>together</em> + <em>plectere</em> "to wear, braid,
   |  Domain         |    │
   +-----------------+    │
   |  Infrastructure |    │
-  +-----------------+    ▼</code></pre></div></div></div></section></section>
-<section><section id="_positives"><h2>Positives</h2></section><section id="_identifying_different_types_of_objects"><h2>Identifying different types of objects</h2><div class="slide-content"><div class="paragraph"><p>There&#8217;s a difference between an <code>Entity</code>, where you care about the thing&#8217;s <em>identity</em> (e.g. an Order), and a <code>Value Object</code>, where you care about the thing&#8217;s <em>value</em> (e.g. an Address). It takes a while, but thinking about the objects not <strong>automatically</strong> as an ActiveRecord is a good exercise.</p></div></div></section><section id="_separation_of_concerns"><h2>Separation of Concerns</h2><div class="slide-content"><div class="paragraph"><p>The Domain never knows what application it&#8217;s being run in, so it can never think about it. It does know that it has <strong>some</strong> kind of persistence mechanism, but it doesn&#8217;t know what it is - (it&#8217;s injected in).</p></div></div></section><section id="_the_domain_is_where_everything_happens"><h2>The Domain is where <strong>everything happens</strong></h2><div class="slide-content"><div class="paragraph"><p>So much so that I was able to put a Sinatra app and a CLI app over the same domain, and they just handled the user&#8217;s flow, not the decisions that were being made.</p></div>
+  +-----------------+    ▼</code></pre></div></div></div></section><section id="_positives"><h2>Positives</h2></section><section id="_identifying_different_types_of_objects"><h2>Identifying different types of objects</h2><div class="slide-content"><div class="paragraph"><p>There&#8217;s a difference between an <code>Entity</code>, where you care about the thing&#8217;s <em>identity</em> (e.g. an Order), and a <code>Value Object</code>, where you care about the thing&#8217;s <em>value</em> (e.g. an Address). It takes a while, but thinking about the objects not <strong>automatically</strong> as an ActiveRecord is a good exercise.</p></div></div></section><section id="_separation_of_concerns"><h2>Separation of Concerns</h2><div class="slide-content"><div class="paragraph"><p>The Domain never knows what application it&#8217;s being run in, so it can never think about it. It does know that it has <strong>some</strong> kind of persistence mechanism, but it doesn&#8217;t know what it is - (it&#8217;s injected in).</p></div></div></section><section id="_the_domain_is_where_everything_happens"><h2>The Domain is where <strong>everything happens</strong></h2><div class="slide-content"><div class="paragraph"><p>So much so that I was able to put a Sinatra app and a CLI app over the same domain, and they just handled the user&#8217;s flow, not the decisions that were being made.</p></div>
 <div class="ulist"><ul><li><p>In the CLI app, an in memory database was used</p></li><li><p>In the Sinatra app, a CSV was used as the database</p></li><li><p>The Domain still doesn&#8217;t know any of those things exist.</p></li></ul></div></div></section><section id="_layered_takeaway_for_our_rails_apps"><h2>Layered takeaway for our Rails apps</h2><div class="slide-content"><div class="paragraph"><p>With broadcasting we actually violate the 'layered architecture' flow in a very interesting way. The Application Layer, sometimes all the way down to our 'domain' layer, knows about HTML.</p></div>
 <div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">class Projects::Update
   def maybe_broadcast_to_live_finance
@@ -463,8 +463,7 @@ from <em>com</em> - with, <em>together</em> + <em>plectere</em> "to wear, braid,
     #  We know if the HTML is already on the page or not
     Projects::LiveFinance.replace(project)
   end
-end</code></pre></div></div></div></section><section id="_testing"><h2>Testing</h2><div class="slide-content"><div class="paragraph"><p>+ Domain tests are fast (there&#8217;s no database)</p></div></div></section></section>
-<section><section id="_negatives"><h2>Negatives</h2></section><section id="_you_always_go_all_the_way_through_the_stack_on_every_action"><h2>You always go all the way through the stack on every action.</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true">                           ▲
+end</code></pre></div></div></div></section><section id="_testing"><h2>Testing</h2><div class="slide-content"><div class="paragraph"><p>+ Domain tests are fast (there&#8217;s no database)</p></div></div></section><section id="_negatives"><h2>Negatives</h2></section><section id="_you_always_go_all_the_way_through_the_stack_on_every_action"><h2>You always go all the way through the stack on every action.</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true">                           ▲
   +-----------------+    │ │
   |  Presentation   |    │ │
   +-----------------+    │ │
@@ -492,7 +491,7 @@ end</code></pre></div></div></div></section><section id="_testing"><h2>Testing</
 <div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true"> ┌───┐      ┌────────────────────────────────┐       ┌───┐
  │I/O│────► │Business Logic / Decision Making│─────► │I/O│
  └───┘      └────────────────────────────────┘       └───┘</code></pre></div></div></div></section>
-<section><section id="_an_example"><h2>An example</h2></section><section id="_what_does_this_code_return"><h2>What does this code return?</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">@product.save</code></pre></div></div></div></section><section id="_boolean_what_else"><h2>Boolean. What else?</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">@product.save # =&gt; Boolean</code></pre></div></div></div></section><section id="_what_else"><h2>What else?</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">@product.save # =&gt; [Boolean, @product*] (@product has also changed)</code></pre></div></div></div></section><section id="_holy_st"><h2>Holy S#!t</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">@product.save # =&gt; [Boolean, @product*,
+<section><section id="_an_example_of_the_problem"><h2>An example of the problem</h2></section><section id="_what_does_this_code_return"><h2>What does this code return?</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">@product.save</code></pre></div></div></div></section><section id="_boolean_what_else_does_it_do"><h2>Boolean. What else does it do?</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">@product.save # =&gt; Boolean</code></pre></div></div></div></section><section id="_it_changes_the_product_object_what_else_could_it_return"><h2>It changes the @product object. What else could it return?</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">@product.save # =&gt; [Boolean, @product*] (@product has also changed)</code></pre></div></div></div></section><section id="_holy_st"><h2>Holy S#!t</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">@product.save # =&gt; [Boolean, @product*,
               #              AdapterNotFound,
               #              AdapterNotSpecified,
               #              AttributeAssignmentError,
@@ -515,14 +514,8 @@ end</code></pre></div></div></div></section><section id="_testing"><h2>Testing</
               #              ConnectionBad (PostgreSQL-specific),
               #              SocketError,
               #              StandardError,
-              #              Error]</code></pre></div></div></div></section><section id="_what_else_could_it_do"><h2>What else <strong>could</strong> it do?</h2><div class="slide-content"><div class="paragraph"><p>absolutely anything:</p></div>
+              #              Error]</code></pre></div></div></div></section><section id="_what_else_could_it_do"><h2>What else could it do?</h2><div class="slide-content"><div class="paragraph"><p>Absolutely anything.</p></div>
 <div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">class Order &lt; ApplicationRecord
-  # Associations
-  belongs_to :customer
-  has_many :order_items
-  has_many :payments
-
-  # Callbacks
   before_save :set_defaults, :apply_discounts, :calculate_total, if: :new_record?
   before_save :adjust_inventory
   before_save :check_order_limits, if: :bulk_order?
@@ -531,11 +524,9 @@ end</code></pre></div></div></div></section><section id="_testing"><h2>Testing</
   after_save :trigger_fulfillment_process, if: :ready_for_fulfillment?
   after_save :update_customer_statistics
 
-  # Validations
   validates :customer_id, presence: true
   validates :status, inclusion: { in: %w[pending paid shipped completed canceled] }
 
-  # Custom Callbacks
   before_validation :sanitize_data, on: :create
   after_commit :log_order_change, on: %i[create update]
 end</code></pre></div></div></div></section></section>
@@ -546,41 +537,55 @@ end</code></pre></div></div></div></section></section>
     updated_purchase_order = purchase_order.receive(receipt_details)
 
     # Return a command to store the updated purchase order
-    Success([Commands::UpdatePurchaseOrder.new(updated_purchase_order),
-             Commands::IncrementRawStock.new(bean_id: updated_purchase_order.bean_id,
-                                             g: updated_purchase_order.g)])
+    Success([UpdatePurchaseOrder.new(updated_purchase_order),
+             IncrementRawStock.new(bean_id: updated_purchase_order.bean_id,
+                                   g: updated_purchase_order.g)])
   end
-end</code></pre></div></div></div></section><section id="_the_command"><h2>The Command</h2><div class="slide-content"><div class="paragraph"><p>The name is a 'decision', and the data is what the shell needs to apply that decision. Nothing else.</p></div>
+end</code></pre></div></div></div></section><section id="_the_command"><h2>The Command</h2><div class="slide-content"><div class="paragraph"><p>Just a signal of intent.</p></div>
 <div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">class IncrementRawStock
   attr_reader :bean_id, :g
-
-  include Dry::Equalizer(:bean_id, :g)
 
   def initialize(bean_id:, g:)
     @bean_id = bean_id
     @g = g
   end
 end</code></pre></div></div>
-<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby"># same thing
-[:increment_raw_stock, { bean_id: 1, g: 1000 }]</code></pre></div></div></div></section><section id="_give_me_valid_data_or_give_me_death"><h2>Give me valid data, or give me death</h2><div class="slide-content"><div class="paragraph"><p>The core expects whatever&#8217;s calling it to already give it valid data types. This means no nil guards, or type checks,
-we&#8217;re just focused on the problem:</p></div>
-<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">class OrderItem &lt; Dry::Struct
-  attribute :price, Types::Money
-  attribute :product_name, Types::String
-  attribute :status, Types::Symbol
-  attribute :bean_mixes, Types::Array.of(Values::BeanMix)
-  attribute :roast_type_id, Types::Symbol
-end</code></pre></div></div></div></section><section id="_two_types_of_validation"><h2>Two types of validation</h2><div class="slide-content"><div class="ulist"><ul><li><p>This reveals the difference between <strong>business validation</strong> and <strong>data validation</strong></p></li></ul></div>
-<div class="paragraph"><p>e.g. Product price must be a decimal is data validation. A minimum price of $10.00 is business validation.</p></div></div></section><section id="_testing_3"><h2>Testing</h2><div class="slide-content"><div class="paragraph"><p>+ There isn&#8217;t a single mock or stub in the core when it&#8217;s tested, they&#8217;re all just objects, there&#8217;s nothing to mock!</p></div>
+<h3>Handling the command</h3><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">result = Flows::ReceivePurchaseOrder.call(**args)
+
+return result if result.failure?
+
+result.commands.each do |cmd|
+  case cmd
+  when IncrementRawStock
+    StockLevel.find_by(bean_id: cmd.bean_id).increment(cmd.g)
+  when SomeOtherCommand
+  else
+    raise UnknownCommandError
+  end</code></pre></div></div></div></section><section id="_testing_3"><h2>Testing</h2><div class="slide-content"><div class="paragraph"><p>+ There isn&#8217;t a single mock or stub in the core when it&#8217;s tested, they&#8217;re all just objects, there&#8217;s nothing to mock!</p></div>
 <div class="paragraph"><p>+ The 'unit test' isn&#8217;t each file, most of them don&#8217;t really <strong>do</strong> anything other than house data. We unit test the <strong>Flow</strong>, which has been designed to map to a real-world person&#8217;s goal:</p></div>
-<div class="paragraph"><p>+ The data is valid by assumption, nothing to test there.</p></div>
 <div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true"> ┌───┐      ┌────────────────────────────────┐       ┌───┐
  │I/O│────► │Business Logic / Decision Making│─────► │I/O│
  └───┘      └────────────────────────────────┘       └───┘
             |────────────────────────────────|
                       UNIT TEST THIS</code></pre></div></div></div></section></section>
-<section id="_the_commands_i_stole_from_elm"><h2>The Commands I stole from Elm</h2><div class="slide-content"><div class="paragraph"><p>Elm is a functional language that has a very strong opinion about how to handle side effects. It&#8217;s called the 'Command Pattern'.</p></div>
-<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true"> ┌────────┐
+<section><section id="_the_commands_i_stole_from_elm"><h2>The Commands I stole from Elm</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-lua hljs" data-noescape="true" data-lang="lua">-- MODEL
+model = 0
+
+update : Msg -&gt; Model -&gt; Model
+update msg model =
+    case msg of
+        Increment -&gt;
+            model + 1
+        Decrement -&gt;
+            model - 1
+
+view : Model -&gt; Html Msg
+view model =
+    div []
+        [ button [ onClick Increment ] [ text "+" ]
+        , div [] [ text (String.fromInt model) ]
+        , button [ onClick Decrement ] [ text "-" ]
+        ]</code></pre></div></div></div></section><section id="_its_this_pattern"><h2>It&#8217;s this pattern</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true"> ┌────────┐
  │  MODEL │◄─────────┐
  └────────┘          │
       │              │
@@ -594,7 +599,74 @@ end</code></pre></div></div></div></section><section id="_two_types_of_validatio
  ┌────────────────┐  │
  │    UPDATE      │  │
  │(model, Command)├──┘
- └────────────────┘</code></pre></div></div></div></section>
+ └────────────────┘</code></pre></div></div></div></section></section>
+<section><section id="_the_lego_problem"><h2>The Lego Problem</h2><div class="slide-content"><div class="paragraph"><p>Because it&#8217;s all just in memory, we can chain things together much more safely inside the core, but to do so, we need a shared way of joining them together.</p></div><div class="paragraph"><p><span class="image"><img src="lego.avif" alt="lego"></span></p></div></div></section><section id="_introducing_the_result_monad"><h2>Introducing the Result Monad</h2><div class="slide-content"><div class="quoteblock"><blockquote>A monad is just a monoid in the category of endofunctors, what&#8217;s the problem?</blockquote></div></div></section><section id="_its_a_wrapper"><h2>It&#8217;s a wrapper.</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby"># if you're happy, return your result in a Success
+# If you're not happy, return it in a Failure.
+
+def validate_user(user)
+  if user.valid?
+    Success(user)
+  else
+    Failure(user.errors)
+  end
+end</code></pre></div></div></div></section><section id="_using_the_wrapper"><h2>Using the wrapper</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">result = validate_user(user)
+
+if result.success?
+  DoSomethingElse.call(success.value!)
+else
+  puts result.failure
+end</code></pre></div></div></div></section><section id="_this_gives_us_lego"><h2>This gives us lego</h2><div class="slide-content"><div class="paragraph"><p>Imagine we&#8217;re:
+* validating the user
+* checking the stock level of the basket
+* processing payment
+* then creating an order.</p></div>
+<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true">       ┌───────┐    ┌───────┐    ┌─────────────┐    ┌─────┐
+────►  │Boolean│──► │Integer│ --&gt;│Stripe object│--&gt; │Order│
+       └───────┘    └───────┘    └─────────────┘    └─────┘</code></pre></div></div>
+<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true">      ┌──────┐     ┌──────┐    ┌──────┐     ┌──────┐
+────► │Result├───► │Result├───►│Result├───► │Result├───►
+      └──────┘     └──────┘    └──────┘     └──────┘</code></pre></div></div></div></section><section id="_a_transaction"><h2>A transaction</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">class PlaceOrderExample
+include Dry::Transaction
+
+  step :validate_basket               #      │
+  step :check_stock                   #      │
+  step :process_payment               #      │
+  step :create_order                  #      │
+                                      #      ▼
+  private
+
+  def validate_basket; end
+  def check_stock; end
+  def process_payment; end
+  def create_order; end</code></pre></div></div></div></section><section id="_more_useful_in_the_io"><h2>More useful in the I/O</h2><div class="slide-content"><div class="paragraph"><p>Although this is a very <strong>functional</strong> pattern, and it&#8217;s been quite nice to say "everything returns success or failure", the power is probably best used for wrapping uncertainites.</p></div>
+<div class="paragraph"><p>Remember this?</p></div>
+<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">@product.save # =&gt; [Boolean, @product*,
+              #              AdapterNotFound,
+              #              AdapterNotSpecified,
+              #              AttributeAssignmentError,
+              #              ConnectionError,
+              #              ConnectionFailed,
+              #              ConnectionTimeoutError,
+              #              Deadlocked,
+              #              InvalidForeignKey,
+              #              LockWaitTimeout,
+              #              QueryCanceled,
+              #              ReadOnlyRecord,
+              #              RecordInvalid,
+              #              RecordNotDestroyed,
+              #              RecordNotSaved,
+              #              RecordNotUnique,
+              #              Rollback,
+              #              SerializationTypeMismatch,
+              #              StatementInvalid,
+              #              UnknownAttributeError,
+              #              ConnectionBad (PostgreSQL-specific),
+              #              SocketError,
+              #              StandardError,
+              #              Error]</code></pre></div></div>
+<div class="paragraph"><p>===</p></div>
+<div class="paragraph"><p>It becomes this:</p></div>
+<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">@product.save # =&gt; Success(product) or Failure(any of the errors)</code></pre></div></div></div></section></section>
 <section><section id="_the_io_layer_outside_of_rails"><h2>The 'I/O' layer outside of Rails</h2><div class="slide-content"><div class="paragraph"><p>An absolute hell hole.</p></div></div></section><section id="_me_using_the_most_popular_sql_management_gem_to_write_some_data"><h2>Me using the most popular SQL management gem to write some data</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-ruby hljs" data-noescape="true" data-lang="ruby">class OrderRepository
   include Dry::Monads[:result]
   include Dry::Monads::Do.for(:create, :find)
@@ -649,8 +721,8 @@ end</code></pre></div></div></div></section><section id="_two_types_of_validatio
     end
   end
 end</code></pre></div></div></div></section></section>
-<section id="_the_lego_problem"><h2>The Lego Problem</h2><div class="slide-content"><div class="paragraph"><p>Composability with Dry Monads and Dry Transactions.</p></div></div></section>
-<section id="_the_best_idea_ive_got_for_now"><h2>The best idea I&#8217;ve got for now</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true"> ┌────────┐
+<section id="_the_best_idea_ive_got_for_now"><h2>The best idea I&#8217;ve got for now</h2><div class="slide-content"><div class="ulist"><ul><li><p>Domain Complexity - Functional Core</p></li><li><p>Technical Complexity - Rails</p></li></ul></div>
+<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-none hljs" data-noescape="true"> ┌────────┐
  │  MODEL │◄─────────┐ | The Rails DB
  └────────┘          │
       │              │
